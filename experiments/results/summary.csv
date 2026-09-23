@@ -1,0 +1,7 @@
+failure_rate,system,trials,completion_rate,handled_without_human_rate,manual_intervention_rate,duplicate_side_effects_total,workflow_restarts_total,orphaned_side_effects_total,avg_api_calls,avg_retries,avg_elapsed_seconds,recovery_actions_total,outcome_breakdown,recovery_success_rate
+0.0,baseline,10,0.2,0.4,0.6,0,12,0,13.6,0,0.0434,0,business_rejection=2; no_stock_no_fallback=4; other_failure=2; resolved=2,
+0.0,servicemesh,10,0.8,1.0,0.0,0,0,0,11.2,0.8,0.1177,8,business_rejection=2; resolved=8,1.0
+0.3,baseline,10,0.2,0.4,0.6,4,12,0,15.6,2,0.4387,0,business_rejection=2; no_stock_no_fallback=4; other_failure=2; resolved=2,
+0.3,servicemesh,10,0.8,1.0,0.0,0,0,0,13.7,3,0.5798,33,business_rejection=2; resolved=8,1.0
+0.6,baseline,10,0.2,0.4,0.6,2,12,0,16.8,3.2,0.4394,0,business_rejection=2; no_stock_no_fallback=4; other_failure=2; resolved=2,
+0.6,servicemesh,10,0.8,1.0,0.0,0,0,0,15.2,4.4,0.879,48,business_rejection=2; resolved=8,1.0

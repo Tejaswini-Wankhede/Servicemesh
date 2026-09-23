@@ -1,0 +1,215 @@
+# ServiceMesh - full stack.
+#
+# Every organization is a separate container with its own PostgreSQL database.
+# That isolation is the point: the orchestration problem only exists because no
+# single transaction can span these systems.
+#
+#   docker compose up -d --build
+#   docker compose exec core python -m scripts.seed --reset
+#   open http://localhost:5173   (UI)   http://localhost:8000/docs  (API)
+#
+# Kafka/Redpanda is in the optional `events` profile. The core system does not
+# need it, so it is not started by default:
+#   docker compose --profile events up -d
+
+name: servicemesh
+
+x-provider-env: &provider-env
+  PROVIDER_DATA_DIR: /data
+  PYTHONUNBUFFERED: "1"
+
+services:
+  # ---------------------------------------------------------------- data
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-servicemesh}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-servicemesh}
+      POSTGRES_DB: servicemesh
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Creates one database per organization on first boot.
+      - ./deploy/init-databases.sql:/docker-entrypoint-initdb.d/10-init.sql:ro
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-servicemesh} -d servicemesh"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  # ------------------------------------------- simulated organizations
+  marketplace:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.provider
+      args:
+        PROVIDER_MODULE: providers.marketplace.app
+        PROVIDER_PORT: "8101"
+    environment:
+      <<: *provider-env
+      PROVIDER_MODULE: providers.marketplace.app
+      PROVIDER_PORT: "8101"
+      MARKETPLACE_DB_URL: postgresql+psycopg2://${POSTGRES_USER:-servicemesh}:${POSTGRES_PASSWORD:-servicemesh}@postgres:5432/org_marketplace
+      MARKETPLACE_API_KEY: ${MARKETPLACE_API_KEY:-mkt-dev-key}
+    ports: ["8101:8101"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: unless-stopped
+
+  manufacturer:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.provider
+      args:
+        PROVIDER_MODULE: providers.manufacturer.app
+        PROVIDER_PORT: "8102"
+    environment:
+      <<: *provider-env
+      PROVIDER_MODULE: providers.manufacturer.app
+      PROVIDER_PORT: "8102"
+      MANUFACTURER_DB_URL: postgresql+psycopg2://${POSTGRES_USER:-servicemesh}:${POSTGRES_PASSWORD:-servicemesh}@postgres:5432/org_manufacturer
+      MANUFACTURER_TOKEN: ${MANUFACTURER_TOKEN:-oem-dev-token}
+    ports: ["8102:8102"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: unless-stopped
+
+  warranty:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.provider
+      args:
+        PROVIDER_MODULE: providers.warranty.app
+        PROVIDER_PORT: "8103"
+    environment:
+      <<: *provider-env
+      PROVIDER_MODULE: providers.warranty.app
+      PROVIDER_PORT: "8103"
+      WARRANTY_DB_URL: postgresql+psycopg2://${POSTGRES_USER:-servicemesh}:${POSTGRES_PASSWORD:-servicemesh}@postgres:5432/org_warranty
+      WARRANTY_CLIENT_ID: ${WARRANTY_CLIENT_ID:-wty-client}
+      WARRANTY_CLIENT_SECRET: ${WARRANTY_CLIENT_SECRET:-wty-secret}
+    ports: ["8103:8103"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: unless-stopped
+
+  service-centre:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.provider
+      args:
+        PROVIDER_MODULE: providers.service_centre.app
+        PROVIDER_PORT: "8104"
+    environment:
+      <<: *provider-env
+      PROVIDER_MODULE: providers.service_centre.app
+      PROVIDER_PORT: "8104"
+      SERVICE_CENTRE_DB_URL: postgresql+psycopg2://${POSTGRES_USER:-servicemesh}:${POSTGRES_PASSWORD:-servicemesh}@postgres:5432/org_service_centre
+      SERVICE_CENTRE_KEY: ${SERVICE_CENTRE_KEY:-svc-dev-key}
+    ports: ["8104:8104"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: unless-stopped
+
+  parts-supplier:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.provider
+      args:
+        PROVIDER_MODULE: providers.parts_supplier.app
+        PROVIDER_PORT: "8105"
+    environment:
+      <<: *provider-env
+      PROVIDER_MODULE: providers.parts_supplier.app
+      PROVIDER_PORT: "8105"
+      PARTS_SUPPLIER_DB_URL: postgresql+psycopg2://${POSTGRES_USER:-servicemesh}:${POSTGRES_PASSWORD:-servicemesh}@postgres:5432/org_parts_supplier
+      SUPPLIER_API_KEY: ${SUPPLIER_API_KEY:-sup-dev-key}
+    ports: ["8105:8105"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: unless-stopped
+
+  # ------------------------------------------------------ ServiceMesh core
+  core:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.core
+    environment:
+      ENVIRONMENT: docker
+      DEBUG: "false"
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-servicemesh}:${POSTGRES_PASSWORD:-servicemesh}@postgres:5432/servicemesh
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set - see .env.example}
+      # Real HTTP between containers; `inproc` is a test-only transport.
+      PROVIDER_TRANSPORT: http
+      MARKETPLACE_URL: http://marketplace:8101
+      MANUFACTURER_URL: http://manufacturer:8102
+      WARRANTY_URL: http://warranty:8103
+      SERVICE_CENTRE_URL: http://service-centre:8104
+      PARTS_SUPPLIER_URL: http://parts-supplier:8105
+      MARKETPLACE_API_KEY: ${MARKETPLACE_API_KEY:-mkt-dev-key}
+      MANUFACTURER_TOKEN: ${MANUFACTURER_TOKEN:-oem-dev-token}
+      WARRANTY_CLIENT_ID: ${WARRANTY_CLIENT_ID:-wty-client}
+      WARRANTY_CLIENT_SECRET: ${WARRANTY_CLIENT_SECRET:-wty-secret}
+      SERVICE_CENTRE_KEY: ${SERVICE_CENTRE_KEY:-svc-dev-key}
+      SUPPLIER_API_KEY: ${SUPPLIER_API_KEY:-sup-dev-key}
+      PROVIDER_TIMEOUT_SECONDS: ${PROVIDER_TIMEOUT_SECONDS:-5}
+      DEFAULT_MAX_RETRIES: ${DEFAULT_MAX_RETRIES:-3}
+      EVENT_BACKEND: ${EVENT_BACKEND:-memory}
+      KAFKA_BOOTSTRAP_SERVERS: redpanda:9092
+      ML_ENABLED: ${ML_ENABLED:-true}
+      GENAI_ENABLED: ${GENAI_ENABLED:-false}
+      GENAI_API_KEY: ${GENAI_API_KEY:-}
+    ports: ["8000:8000"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      marketplace: {condition: service_started}
+      manufacturer: {condition: service_started}
+      warranty: {condition: service_started}
+      service-centre: {condition: service_started}
+      parts-supplier: {condition: service_started}
+    restart: unless-stopped
+
+  # ------------------------------------------------------------- frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.frontend
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+    ports: ["5173:80"]
+    depends_on:
+      core: {condition: service_started}
+    restart: unless-stopped
+
+  # ----------------------------------------------- optional: event broker
+  redpanda:
+    profiles: ["events"]
+    image: redpandadata/redpanda:v24.2.7
+    command:
+      - redpanda start
+      - --smp 1
+      - --overprovisioned
+      - --kafka-addr PLAINTEXT://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://redpanda:9092
+    ports: ["9092:9092"]
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -q 'Healthy:.*true'"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  redpanda-console:
+    profiles: ["events"]
+    image: redpandadata/console:v2.7.2
+    environment:
+      KAFKA_BROKERS: redpanda:9092
+    ports: ["8080:8080"]
+    depends_on:
+      redpanda: {condition: service_started}
+    restart: unless-stopped
+
+volumes:
+  pgdata:

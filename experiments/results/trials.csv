@@ -1,0 +1,61 @@
+system,failure_rate,trial,serial,completed,outcome,elapsed_seconds,api_calls,retries,duplicate_side_effects,workflow_restarts,manual_intervention,orphaned_side_effects,recovery_actions,recoveries_succeeded,steps_completed,reason
+baseline,0.0,0,SN-AX14-0001,1,RESOLVED,0.1143,10,0,0,0,0,0,0,0,10,
+servicemesh,0.0,0,SN-AX14-0001,1,RESOLVED,0.1329,12,0,0,0,0,0,0,0,0,repair completed and verified across all participants
+baseline,0.0,1,SN-AX15-0001,0,MANUAL_INTERVENTION,0.0436,18,0,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.0,1,SN-AX15-0001,1,RESOLVED,0.1446,14,2,0,0,0,0,2,2,0,repair completed and verified across all participants
+baseline,0.0,2,SN-AX15-0002,0,MANUAL_INTERVENTION,0.046,18,0,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.0,2,SN-AX15-0002,1,RESOLVED,0.1785,13,1,0,0,0,0,1,1,0,repair completed and verified across all participants
+baseline,0.0,3,SN-ZN13-0001,0,MANUAL_INTERVENTION,0.0439,18,0,0,2,1,0,0,0,6,sku not carried by this supplier
+servicemesh,0.0,3,SN-ZN13-0001,1,RESOLVED,0.1284,13,1,0,0,0,0,1,1,0,repair completed and verified across all participants
+baseline,0.0,4,SN-AX14-0003,0,REJECTED,0.0098,4,0,0,0,0,0,0,0,3,issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
+servicemesh,0.0,4,SN-AX14-0003,0,REJECTED,0.0362,4,0,0,0,0,0,0,0,0,COVERAGE_GRANTED: issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
+baseline,0.0,5,SN-AX14-0001,1,RESOLVED,0.0299,10,0,0,0,0,0,0,0,10,
+servicemesh,0.0,5,SN-AX14-0001,1,RESOLVED,0.1142,12,0,0,0,0,0,0,0,0,repair completed and verified across all participants
+baseline,0.0,6,SN-AX15-0001,0,MANUAL_INTERVENTION,0.0444,18,0,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.0,6,SN-AX15-0001,1,RESOLVED,0.1391,14,2,0,0,0,0,2,2,0,repair completed and verified across all participants
+baseline,0.0,7,SN-AX15-0002,0,MANUAL_INTERVENTION,0.0461,18,0,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.0,7,SN-AX15-0002,1,RESOLVED,0.1363,13,1,0,0,0,0,1,1,0,repair completed and verified across all participants
+baseline,0.0,8,SN-ZN13-0001,0,MANUAL_INTERVENTION,0.0462,18,0,0,2,1,0,0,0,6,sku not carried by this supplier
+servicemesh,0.0,8,SN-ZN13-0001,1,RESOLVED,0.127,13,1,0,0,0,0,1,1,0,repair completed and verified across all participants
+baseline,0.0,9,SN-AX14-0003,0,REJECTED,0.0096,4,0,0,0,0,0,0,0,3,issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
+servicemesh,0.0,9,SN-AX14-0003,0,REJECTED,0.0402,4,0,0,0,0,0,0,0,0,COVERAGE_GRANTED: issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
+baseline,0.3,0,SN-AX14-0001,1,RESOLVED,1.6411,16,6,2,0,0,0,0,0,10,
+servicemesh,0.3,0,SN-AX14-0001,1,RESOLVED,0.5475,15,2,0,0,0,0,3,3,0,repair completed and verified across all participants
+baseline,0.3,1,SN-AX15-0001,0,MANUAL_INTERVENTION,0.0476,20,2,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.3,1,SN-AX15-0001,1,RESOLVED,0.964,16,4,0,0,0,0,4,4,0,repair completed and verified across all participants
+baseline,0.3,2,SN-AX15-0002,0,MANUAL_INTERVENTION,0.0455,18,0,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.3,2,SN-AX15-0002,1,RESOLVED,1.3735,17,4,0,0,0,0,5,5,0,repair completed and verified across all participants
+baseline,0.3,3,SN-ZN13-0001,0,MANUAL_INTERVENTION,0.0454,18,0,0,2,1,0,0,0,6,sku not carried by this supplier
+servicemesh,0.3,3,SN-ZN13-0001,1,RESOLVED,0.1261,13,1,0,0,0,0,1,1,0,repair completed and verified across all participants
+baseline,0.3,4,SN-AX14-0003,0,REJECTED,0.0117,6,2,0,0,0,0,0,0,3,issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
+servicemesh,0.3,4,SN-AX14-0003,0,REJECTED,0.0388,4,0,0,0,0,0,0,0,0,COVERAGE_GRANTED: issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
+baseline,0.3,5,SN-AX14-0001,1,RESOLVED,1.6389,14,4,2,0,0,0,0,0,10,
+servicemesh,0.3,5,SN-AX14-0001,1,RESOLVED,0.9634,16,4,0,0,0,0,4,4,0,repair completed and verified across all participants
+baseline,0.3,6,SN-AX15-0001,0,MANUAL_INTERVENTION,0.0442,18,0,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.3,6,SN-AX15-0001,1,RESOLVED,1.3764,17,4,0,0,0,0,5,5,0,repair completed and verified across all participants
+baseline,0.3,7,SN-AX15-0002,0,MANUAL_INTERVENTION,0.0476,20,2,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.3,7,SN-AX15-0002,1,RESOLVED,0.1904,17,5,0,0,0,0,5,5,0,repair completed and verified across all participants
+baseline,0.3,8,SN-ZN13-0001,0,MANUAL_INTERVENTION,0.854,20,2,0,2,1,0,0,0,6,sku not carried by this supplier
+servicemesh,0.3,8,SN-ZN13-0001,1,RESOLVED,0.1788,18,6,0,0,0,0,6,6,0,repair completed and verified across all participants
+baseline,0.3,9,SN-AX14-0003,0,REJECTED,0.0109,6,2,0,0,0,0,0,0,3,issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
+servicemesh,0.3,9,SN-AX14-0003,0,REJECTED,0.0391,4,0,0,0,0,0,0,0,0,COVERAGE_GRANTED: issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
+baseline,0.6,0,SN-AX14-0001,1,RESOLVED,0.0333,16,6,0,0,0,0,0,0,10,
+servicemesh,0.6,0,SN-AX14-0001,1,RESOLVED,1.393,17,4,0,0,0,0,5,5,0,repair completed and verified across all participants
+baseline,0.6,1,SN-AX15-0001,0,MANUAL_INTERVENTION,0.8492,20,2,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.6,1,SN-AX15-0001,1,RESOLVED,0.9658,16,4,0,0,0,0,4,4,0,repair completed and verified across all participants
+baseline,0.6,2,SN-AX15-0002,0,MANUAL_INTERVENTION,0.8555,22,4,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.6,2,SN-AX15-0002,1,RESOLVED,0.9858,16,4,0,0,0,0,4,4,0,repair completed and verified across all participants
+baseline,0.6,3,SN-ZN13-0001,0,MANUAL_INTERVENTION,0.851,22,4,0,2,1,0,0,0,6,sku not carried by this supplier
+servicemesh,0.6,3,SN-ZN13-0001,1,RESOLVED,0.9692,16,4,0,0,0,0,4,4,0,repair completed and verified across all participants
+baseline,0.6,4,SN-AX14-0003,0,REJECTED,0.0122,6,2,0,0,0,0,0,0,3,issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
+servicemesh,0.6,4,SN-AX14-0003,0,REJECTED,0.0648,6,2,0,0,0,0,2,2,0,COVERAGE_GRANTED: issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
+baseline,0.6,5,SN-AX14-0001,1,RESOLVED,0.8375,16,6,2,0,0,0,0,0,10,
+servicemesh,0.6,5,SN-AX14-0001,1,RESOLVED,1.3957,19,6,0,0,0,0,7,7,0,repair completed and verified across all participants
+baseline,0.6,6,SN-AX15-0001,0,MANUAL_INTERVENTION,0.05,20,2,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.6,6,SN-AX15-0001,1,RESOLVED,0.9923,18,6,0,0,0,0,6,6,0,repair completed and verified across all participants
+baseline,0.6,7,SN-AX15-0002,0,MANUAL_INTERVENTION,0.849,20,2,0,2,1,0,0,0,6,only 0 available
+servicemesh,0.6,7,SN-AX15-0002,1,RESOLVED,1.3976,21,8,0,0,0,0,9,9,0,repair completed and verified across all participants
+baseline,0.6,8,SN-ZN13-0001,0,MANUAL_INTERVENTION,0.0451,20,2,0,2,1,0,0,0,6,sku not carried by this supplier
+servicemesh,0.6,8,SN-ZN13-0001,1,RESOLVED,0.5862,19,6,0,0,0,0,7,7,0,repair completed and verified across all participants
+baseline,0.6,9,SN-AX14-0003,0,REJECTED,0.0116,6,2,0,0,0,0,0,0,3,issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
+servicemesh,0.6,9,SN-AX14-0003,0,REJECTED,0.0392,4,0,0,0,0,0,0,0,0,COVERAGE_GRANTED: issue type BATTERY_FAILURE is excluded by plan BASIC; component type BATTERY not covered by plan
